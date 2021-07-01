@@ -3,13 +3,16 @@ package kg.megacom.referralSys.Service.impl;
 import kg.megacom.referralSys.Models.Invite;
 import kg.megacom.referralSys.Models.dto.InviteDto;
 import kg.megacom.referralSys.Service.InviteService;
+import kg.megacom.referralSys.Service.SubscriberService;
 import kg.megacom.referralSys.dao.InviteRepo;
 import kg.megacom.referralSys.dao.SubscriberRepo;
+import kg.megacom.referralSys.mappers.SubscriberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -19,13 +22,13 @@ public class InviteServiceImpl implements InviteService {
     private InviteRepo inviteRepo;
 
     @Autowired
-    private SubscriberRepo subscriberRepo;
+    private SubscriberService subscriberService;
+
+    private SubscriberMapper subscriberMapper;
 
     @Override
     public void saveInvite() {
-        Invite invite = new Invite();
-        invite.setSender(subscriberRepo.getById(12414l));
-        invite.setReceiver(subscriberRepo.getById(12514l));
+
     }
 
     @Override
@@ -35,7 +38,10 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public InviteDto sendInvite(InviteDto inviteDto) {
-        System.out.println(inviteDto);
-        return inviteDto;
+        inviteDto.setSender(subscriberService.getOrCreate(inviteDto.getSender()));
+        inviteDto.setReceiver(subscriberService.getOrCreate(inviteDto.getReceiver()));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add();
     }
 }
