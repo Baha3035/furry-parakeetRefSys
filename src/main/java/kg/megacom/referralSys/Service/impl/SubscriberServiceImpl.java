@@ -7,9 +7,11 @@ import kg.megacom.referralSys.dao.SubscriberRepo;
 import kg.megacom.referralSys.exceptions.SubscriberNotFoundException;
 import kg.megacom.referralSys.mappers.SubscriberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@Service
 public class SubscriberServiceImpl implements SubscriberService {
 
     @Autowired

@@ -10,4 +10,5 @@ import java.util.Date;
 @Repository
 public interface InviteRepo extends JpaRepository<Invite, Long> {
     long countAllBySenderAndStartDateAfter(Subscriber sender,  Date date);
+    Invite findByReceiver(Subscriber receiver);
 }

@@ -1,15 +1,19 @@
 package kg.megacom.referralSys.Service.impl;
 
+import kg.megacom.referralSys.Enums.Status;
 import kg.megacom.referralSys.Models.Invite;
+import kg.megacom.referralSys.Models.Subscriber;
 import kg.megacom.referralSys.Models.dto.InviteDto;
 import kg.megacom.referralSys.Service.InviteService;
 import kg.megacom.referralSys.Service.SubscriberService;
 import kg.megacom.referralSys.dao.InviteRepo;
 import kg.megacom.referralSys.dao.SubscriberRepo;
 import kg.megacom.referralSys.exceptions.LimitReachedException;
+import kg.megacom.referralSys.mappers.InviteMapper;
 import kg.megacom.referralSys.mappers.SubscriberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.UnknownHttpStatusCodeException;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -23,9 +27,16 @@ public class InviteServiceImpl implements InviteService {
     private InviteRepo inviteRepo;
 
     @Autowired
+    private SubscriberRepo subscriberRepo;
+
+    @Autowired
     private SubscriberService subscriberService;
 
+    @Autowired
     private SubscriberMapper subscriberMapper;
+
+    @Autowired
+    private InviteMapper inviteMapper;
 
     @Override
     public void saveInvite() {
@@ -63,5 +74,24 @@ public class InviteServiceImpl implements InviteService {
 
         System.out.println(inviteDto);
         return inviteDto;
+    }
+
+    @Override
+    public InviteDto acceptInvite(long subsId) {
+        if (subscriberRepo.existsById(subsId)) {
+            if (inviteRepo.findByReceiver(subscriberRepo.getById(subsId)) != null) {
+                InviteDto inviteDto = inviteMapper.toInviteDto(
+                        inviteRepo.findByReceiver(subscriberRepo.getById(subsId)));
+                inviteDto.setStatus(Status.ACCEPTED);
+                return null;
+            }
+            throw new RuntimeException("У абонента нет приглашения!!!");
+        }
+
+        Subscriber subscriber = new Subscriber();
+        subscriber.setActive(false);
+        subscriber.setSubsId(subsId);
+        subscriberRepo.save(subscriber);
+        throw new RuntimeException("Абонента не существует!!!");
     }
 }

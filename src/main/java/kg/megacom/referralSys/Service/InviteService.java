@@ -11,4 +11,6 @@ public interface InviteService {
     List<Invite> findAll();
 
     InviteDto sendInvite(InviteDto inviteDto);
+
+    InviteDto acceptInvite(long subsId) throws Exception;
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class InviteDto {
@@ -16,7 +17,7 @@ public class InviteDto {
 
     private SubscriberDto receiver;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Date startDate;
+    private Date endDate;
     private Status status;
 }
