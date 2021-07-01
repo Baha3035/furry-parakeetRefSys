@@ -5,5 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.LOCKED)
 public class LimitReachedException extends RuntimeException{
-
+    public LimitReachedException(String message){
+        super(message);
+    }
 }
