@@ -39,8 +39,8 @@ public class InviteServiceImpl implements InviteService {
     private InviteMapper inviteMapper;
 
     @Override
-    public void saveInvite() {
-
+    public void saveInvite(InviteDto inviteDto) {
+        inviteRepo.save(inviteMapper.toInvite(inviteDto));
     }
 
     @Override
@@ -52,6 +52,7 @@ public class InviteServiceImpl implements InviteService {
     public InviteDto sendInvite(InviteDto inviteDto) {
         inviteDto.setSender(subscriberService.getOrCreate(inviteDto.getSender()));
         inviteDto.setReceiver(subscriberService.getOrCreate(inviteDto.getReceiver()));
+        inviteDto.setStatus(Status.ACTIVE);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -71,6 +72,12 @@ public class InviteServiceImpl implements InviteService {
             throw new ArithmeticException("Абонент отключил возможность приглашения!");
         }
 
+        saveInvite(inviteDto);
+
+        if(inviteRepo.countAllByReceiver(subscriberMapper.toSubscriber(inviteDto.getReceiver())) > 1){
+            inviteRepo.getById(inviteMapper.toInvite(inviteDto).getId()-1).setStatus(Status.NOT_ACTIVE);
+        }
+
 
         System.out.println(inviteDto);
         return inviteDto;
@@ -79,11 +86,11 @@ public class InviteServiceImpl implements InviteService {
     @Override
     public InviteDto acceptInvite(long subsId) {
         if (subscriberRepo.existsById(subsId)) {
-            if (inviteRepo.findByReceiver(subscriberRepo.getById(subsId)) != null) {
+            if (inviteRepo.findByReceiverAndStatus(subscriberRepo.getById(subsId), Status.ACTIVE) != null) {
                 InviteDto inviteDto = inviteMapper.toInviteDto(
-                        inviteRepo.findByReceiver(subscriberRepo.getById(subsId)));
+                        inviteRepo.findByReceiverAndStatus(subscriberRepo.getById(subsId), Status.ACTIVE));
                 inviteDto.setStatus(Status.ACCEPTED);
-                return null;
+                return inviteDto;
             }
             throw new RuntimeException("У абонента нет приглашения!!!");
         }

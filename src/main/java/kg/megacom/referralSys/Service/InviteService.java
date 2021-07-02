@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 public interface InviteService {
-    void saveInvite();
+    void saveInvite(InviteDto inviteDto);
     List<Invite> findAll();
 
     InviteDto sendInvite(InviteDto inviteDto);

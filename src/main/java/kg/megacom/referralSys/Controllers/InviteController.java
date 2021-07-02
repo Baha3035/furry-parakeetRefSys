@@ -19,8 +19,7 @@ public class InviteController {
     }
 
     @PostMapping("/accept")
-    public InviteDto accept(@RequestParam("subs_id") long subsId){
-
+    public InviteDto accept(@RequestParam("subs_id") long subsId) throws Exception {
         return inviteService.acceptInvite(subsId);
     }
 }

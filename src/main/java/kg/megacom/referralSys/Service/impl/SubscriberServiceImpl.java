@@ -36,4 +36,10 @@ public class SubscriberServiceImpl implements SubscriberService {
         }
         return subscriberMapper.toSubscriberDto(subscriber);
     }
+
+    @Override
+    public SubscriberDto block(SubscriberDto subscriberDto, boolean active) {
+        subscriberDto.setActive(active);
+        return subscriberDto;
+    }
 }

@@ -1,5 +1,6 @@
 package kg.megacom.referralSys.dao;
 
+import kg.megacom.referralSys.Enums.Status;
 import kg.megacom.referralSys.Models.Invite;
 import kg.megacom.referralSys.Models.Subscriber;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,6 @@ import java.util.Date;
 @Repository
 public interface InviteRepo extends JpaRepository<Invite, Long> {
     long countAllBySenderAndStartDateAfter(Subscriber sender,  Date date);
-    Invite findByReceiver(Subscriber receiver);
+    Invite findByReceiverAndStatus(Subscriber receiver, Status status);
+    long countAllByReceiver(Subscriber receiver);
 }
